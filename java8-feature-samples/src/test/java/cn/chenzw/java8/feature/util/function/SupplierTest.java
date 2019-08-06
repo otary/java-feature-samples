@@ -1,5 +1,6 @@
 package cn.chenzw.java8.feature.util.function;
 
+import cn.chenzw.java8.feature.domain.Book;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,18 @@ public class SupplierTest {
         Supplier<String> supplier = () -> "chenzw";
 
         Assert.assertEquals("chenzw", supplier.get());
+
+
+    }
+
+    @Test
+    public void testSupplierConstructor() {
+        Supplier<Book> bookSupplier = () -> new Book(1L, "书名", 20.45);
+
+        Book book = bookSupplier.get();
+        Assert.assertEquals((Long) 1L, book.getId());
+        Assert.assertEquals("书名", book.getName());
+
     }
 
     /**
