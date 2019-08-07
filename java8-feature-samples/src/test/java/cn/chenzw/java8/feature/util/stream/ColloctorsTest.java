@@ -1,10 +1,16 @@
 package cn.chenzw.java8.feature.util.stream;
 
+import cn.chenzw.java8.feature.domain.Book;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,6 +20,16 @@ import java.util.stream.Stream;
  */
 @RunWith(JUnit4.class)
 public class ColloctorsTest {
+
+    private static List<Book> books = new ArrayList<>();
+
+    @BeforeClass
+    public static void init() {
+        books.add(new Book(1L, "JVM构造原理", 50.2));
+        books.add(new Book(2L, "Mavan实践", 10.4));
+        books.add(new Book(3L, "JDK8实践", 34.7));
+    }
+
 
     /**
      * 统计元素个数
@@ -31,13 +47,88 @@ public class ColloctorsTest {
         Assert.assertEquals(5, count);
     }
 
+    /**
+     * 获取最大值
+     */
     @Test
     public void testMaxBy() {
-        Integer[] intArray = {4, 5, 3, 9, 10};
+        Integer[] intArray = {14, 5, 29, 9, 10};
 
-        // Stream.of(intArray).collect(Collectors.maxBy())
+        Optional<Integer> maxOptional = Stream.of(intArray).max((o1, o2) -> o1.compareTo(o2));
 
+        // 简写
+        // Optional<Integer> maxOptional = Stream.of(intArray).max(Comparator.naturalOrder());
+
+        Assert.assertEquals(29, maxOptional.get().intValue());
     }
 
+    /**
+     * 最小值
+     */
+    @Test
+    public void testMin() {
+        Integer[] intArray = {14, 5, 29, 9, 10};
+        Optional<Integer> minOptional = Stream.of(intArray).collect(Collectors.minBy((o1, o2) -> o1.compareTo(o2)));
+
+        Assert.assertEquals(5, minOptional.get().intValue());
+    }
+
+
+    /**
+     * 求和
+     */
+    @Test
+    public void testSummingInt() {
+        Integer[] intArray = {14, 5, 29, 9, 10};
+        int sum = Stream.of(intArray).collect(Collectors.summingInt((x) -> x.intValue()));
+
+        Assert.assertEquals(67, sum); // 总和
+    }
+
+
+    /**
+     * 平均值
+     */
+    @Test
+    public void testAverageingInt() {
+        Integer[] intArray = {14, 5, 29, 9, 10};
+        double average = Stream.of(intArray).collect(Collectors.averagingInt((x) -> x.intValue()));
+
+        Assert.assertEquals(13.4, average);
+    }
+
+
+    /**
+     * 拼接
+     */
+    @Test
+    public void testJoining() {
+        String[] stringArray = {"Java", "C++", "Golang"};
+        String joining = Stream.of(stringArray).collect(Collectors.joining(","));
+
+        Assert.assertEquals("Java,C++,Golang", joining);
+    }
+
+
+    /**
+     * 排序
+     */
+    @Test
+    public void testGroupBy() {
+        Map<Double, List<Book>> groupBy = books.stream().collect(Collectors.groupingBy((book) -> book.getPrice()));
+
+        Assert.assertEquals("{50.2=[Book{id=1, name='JVM构造原理', price=50.2}], 10.4=[Book{id=2, name='Mavan实践', price=10.4}], 34.7=[Book{id=3, name='JDK8实践', price=34.7}]}", groupBy.toString());
+    }
+
+
+    /**
+     * 分组
+     */
+    @Test
+    public void testPartitioningBy() {
+        Map<Boolean, List<Book>> partitioningBy = books.stream().collect(Collectors.partitioningBy((book) -> book.getPrice() > 20));
+
+        Assert.assertEquals("{false=[Book{id=2, name='Mavan实践', price=10.4}], true=[Book{id=1, name='JVM构造原理', price=50.2}, Book{id=3, name='JDK8实践', price=34.7}]}", partitioningBy.toString());
+    }
 
 }
