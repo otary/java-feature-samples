@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -95,6 +93,44 @@ public class StreamTest {
                 .collect(Collectors.toList());  // => [ZHANGSAN, LISI, WANGWU]
 
         Assert.assertThat(list, Matchers.hasItems("ZHANGSAN", "LISI", "WANGWU"));
+    }
+
+    @Test
+    public void testStreamCount() {
+        long count = books.stream().count();
+        Assert.assertEquals(3, count);
+    }
+
+    @Test
+    public void testStreamMin() {
+        Optional<Book> minBook = books.stream().min(Comparator.comparing(Book::getPrice));
+
+        Assert.assertEquals((Long) 2L, minBook.get().getId());
+    }
+
+    @Test
+    public void testStreamMax() {
+        Optional<Book> maxBook = books.stream().max(Comparator.comparing(Book::getPrice));
+
+        Assert.assertEquals((Long) 1L, maxBook.get().getId());
+    }
+
+
+    /**
+     * 每次传入上一次计算结果的值
+     */
+    @Test
+    public void testStreamReduce() {
+        Integer[] intArray = {1, 2, 3, 4};
+
+        int sum = Stream.of(intArray).reduce(Integer::sum).orElse(0).intValue();
+        Assert.assertEquals(10, sum);
+
+        int max = Stream.of(intArray).reduce(Integer::max).orElse(0).intValue();
+        Assert.assertEquals(4, max);
+
+        int min = Stream.of(intArray).reduce(Integer::min).orElse(0).intValue();
+        Assert.assertEquals(1, min);
     }
 
 
