@@ -53,8 +53,52 @@ public class OptionalTest {
     }
 
     @Test
-    public void test() {
+    public void testEmpty() {
+        Optional<Object> empty = Optional.empty();
 
+        Assert.assertFalse(empty.isPresent());
     }
+
+
+    /**
+     * orElse(空值时返回orElse的值)
+     */
+    @Test
+    public void testOrElse() {
+        Optional<String> stringOptional = Optional.ofNullable(null);
+        Assert.assertEquals("张三", stringOptional.orElse("张三"));
+
+        Optional<String> stringOptional2 = Optional.ofNullable("chenzw");
+        Assert.assertEquals("chenzw", stringOptional2.orElse("张三"));
+    }
+
+    /**
+     * orElseGet(空值时返回orElseGet调用的函数值)
+     */
+    @Test
+    public void testOrElseGet() {
+        Optional<String> nullOptional = Optional.ofNullable(null);
+        Assert.assertEquals("张三", nullOptional.orElseGet(() -> {
+            return "张三";
+        }));
+
+        Optional<String> stringOptional = Optional.ofNullable("chenzw");
+        Assert.assertEquals("chenzw", stringOptional.orElseGet(() -> {
+            return "张三";
+        }));
+    }
+
+    /**
+     * orElseThrow（空值时抛出异常）
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testOrElseThrow() throws Throwable {
+        Optional<String> stringOptional = Optional.ofNullable(null);
+        stringOptional.orElseThrow(() -> {
+            throw new IllegalArgumentException("抛出异常");
+        });
+    }
+
+
 
 }
