@@ -18,6 +18,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+
 
 @RunWith(JUnit4.class)
 public class StreamTest {
@@ -78,7 +80,7 @@ public class StreamTest {
     public void testStreamCollect() {
         Stream<String> stringStream = Stream.of("张三", "李四", "王五");
         // 详见
-        List<String> list = stringStream.collect(Collectors.toList());
+        List<String> list = stringStream.collect(toList());
 
         Assert.assertEquals(3, list.size());
     }
@@ -90,17 +92,23 @@ public class StreamTest {
     public void testStreamMap() {
         Stream<String> stringStream = Stream.of("zhangsan", "lisi", "wangwu");
         List<String> list = stringStream.map((s) -> s.toUpperCase())
-                .collect(Collectors.toList());  // => [ZHANGSAN, LISI, WANGWU]
+                .collect(toList());  // => [ZHANGSAN, LISI, WANGWU]
 
         Assert.assertThat(list, Matchers.hasItems("ZHANGSAN", "LISI", "WANGWU"));
     }
 
+    /**
+     * 统计个数
+     */
     @Test
     public void testStreamCount() {
         long count = books.stream().count();
         Assert.assertEquals(3, count);
     }
 
+    /**
+     * 取最小值
+     */
     @Test
     public void testStreamMin() {
         Optional<Book> minBook = books.stream().min(Comparator.comparing(Book::getPrice));
@@ -108,6 +116,9 @@ public class StreamTest {
         Assert.assertEquals((Long) 2L, minBook.get().getId());
     }
 
+    /**
+     * 取最大值
+     */
     @Test
     public void testStreamMax() {
         Optional<Book> maxBook = books.stream().max(Comparator.comparing(Book::getPrice));
@@ -126,6 +137,9 @@ public class StreamTest {
         int sum = Stream.of(intArray).reduce(Integer::sum).orElse(0).intValue();
         Assert.assertEquals(10, sum);
 
+        int sum2 = Stream.of(intArray).reduce(5, (a, b) -> a + b).intValue();
+        Assert.assertEquals(15, sum2);
+
         int max = Stream.of(intArray).reduce(Integer::max).orElse(0).intValue();
         Assert.assertEquals(4, max);
 
@@ -133,5 +147,109 @@ public class StreamTest {
         Assert.assertEquals(1, min);
     }
 
+    /**
+     * 遍历
+     */
+    @Test
+    public void testStreamForEach() {
+        books.stream().forEach(book -> {
+            System.out.println(book);
+        });
+    }
+
+    /**
+     * 去重
+     */
+    @Test
+    public void testStreamDistinct() {
+        Integer[] intArray = {1, 2, 3, 4, 3, 5};
+        Stream<Integer> distinct = Stream.of(intArray).distinct();
+
+        Assert.assertEquals(new Integer[]{1, 2, 3, 4, 5}, distinct.toArray());
+    }
+
+
+    /**
+     * 取前n个元素
+     */
+    @Test
+    public void testStreamLimit() {
+        Integer[] intArray = {1, 2, 3, 4, 3, 5};
+        Stream<Integer> limit = Stream.of(intArray).limit(3);
+
+        Assert.assertEquals(3, limit.count());
+    }
+
+    /**
+     * 跳过n个元素
+     */
+    @Test
+    public void testStreamSkip() {
+        Integer[] intArray = {1, 2, 3, 4, 3, 5};
+        Stream<Integer> skip = Stream.of(intArray).skip(3);
+
+        Assert.assertEquals(new Integer[]{4, 3, 5}, skip.toArray());
+    }
+
+    /**
+     * 合并流
+     */
+    @Test
+    public void testStreamFlatMap() {
+        String[][] words = {
+                {"H", "e", "l", "l", "o"},
+                {"W", "o", "r", "d"}
+        };
+        Stream<String> flatMap = Stream.of(words)
+                .flatMap(Arrays::stream);
+
+        Assert.assertEquals(new String[]{"H", "e", "l", "l", "o", "W", "o", "r", "d"}, flatMap.toArray());
+    }
+
+
+    /**
+     * 全部匹配
+     */
+    @Test
+    public void testStreamAllMatch() {
+        // 所有书价格>10
+        Assert.assertTrue(books.stream().allMatch(book -> book.getPrice() > 10));
+
+        // 并非所有书价格>20
+        Assert.assertFalse(books.stream().allMatch(book -> book.getPrice() > 20));
+    }
+
+    /**
+     * 任意一个匹配
+     */
+    @Test
+    public void testStreamAnyMatch() {
+        // 任意一本书价格>10
+        Assert.assertTrue(books.stream().anyMatch(book -> book.getPrice() > 10));
+
+        // 任意一本书价格>20
+        Assert.assertTrue(books.stream().anyMatch(book -> book.getPrice() > 20));
+    }
+
+
+    /**
+     * 获取第一个元素
+     */
+    @Test
+    public void testStreamFindFirst() {
+        String[] strings = {"Java", "C++", "Golang"};
+
+        Assert.assertEquals("Java", Stream.of(strings).findFirst().get());
+    }
+
+    /**
+     * 获取第一个元素（常用于并行流）
+     */
+    @Test
+    public void testStreamFindAny() {
+        String[] strings = {"Java", "C++", "Golang"};
+
+        Assert.assertEquals("C++", Stream.of(strings).parallel().findAny().get());
+    }
 
 }

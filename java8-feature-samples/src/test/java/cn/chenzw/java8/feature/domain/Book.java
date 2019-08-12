@@ -1,5 +1,7 @@
 package cn.chenzw.java8.feature.domain;
 
+import java.util.Objects;
+
 public class Book {
 
     private Long id;
@@ -43,5 +45,20 @@ public class Book {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id.equals(book.id) &&
+                name.equals(book.name) &&
+                price.equals(book.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price);
     }
 }
