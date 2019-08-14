@@ -252,4 +252,15 @@ public class StreamTest {
         Assert.assertEquals("C++", Stream.of(strings).parallel().findAny().get());
     }
 
+    /**
+     * 并行遍历
+     */
+    @Test
+    public void testStreamSpliterator() {
+        String[] strings = {"Java", "C++", "Golang"};
+
+        Stream.of(strings).spliterator().forEachRemaining(System.out::println);
+    }
+
+
 }
