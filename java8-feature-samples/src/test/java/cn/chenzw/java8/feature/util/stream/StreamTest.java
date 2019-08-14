@@ -262,5 +262,19 @@ public class StreamTest {
         Stream.of(strings).spliterator().forEachRemaining(System.out::println);
     }
 
+    /**
+     * 并行流
+     */
+    @Test
+    public void testParallelStream(){
+        // 串行流
+        books.stream().forEach(System.out::println);
+
+        // 并行流
+        books.parallelStream().forEach(System.out::println);
+        // 按照顺序执行
+        books.parallelStream().forEachOrdered(System.out::println);
+    }
+
 
 }

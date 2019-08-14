@@ -11,5 +11,10 @@
 
     <artifactId>java9-feature-samples</artifactId>
 
-
+    <properties>
+        <java.version>1.9</java.version>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.9</maven.compiler.compilerVersion>
+    </properties>
 </project>
