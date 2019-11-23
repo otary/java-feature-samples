@@ -12,6 +12,7 @@
         <module>java9-feature-samples</module>
         <module>java10-feature-samples</module>
         <module>java11-feature-samples</module>
+        <module>javax--feature-samples</module>
     </modules>
     <packaging>pom</packaging>
 

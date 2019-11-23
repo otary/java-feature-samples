@@ -7,10 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,7 +52,10 @@ public class ColloctorsTest {
     public void testMaxBy() {
         Integer[] intArray = {14, 5, 29, 9, 10};
 
-        Optional<Integer> maxOptional = Stream.of(intArray).max((o1, o2) -> o1.compareTo(o2));
+        Optional<Integer> maxOptional = Stream.of(intArray).collect(Collectors.maxBy((o1, o2) -> o1.compareTo(o2)));
+
+        // 等于于
+        // Optional<Integer> maxOptional = Stream.of(intArray).max((o1, o2) -> o1.compareTo(o2));
 
         // 简写
         // Optional<Integer> maxOptional = Stream.of(intArray).max(Comparator.naturalOrder());
@@ -129,6 +130,29 @@ public class ColloctorsTest {
         Map<Boolean, List<Book>> partitioningBy = books.stream().collect(Collectors.partitioningBy((book) -> book.getPrice() > 20));
 
         Assert.assertEquals("{false=[Book{id=2, name='Mavan实践', price=10.4}], true=[Book{id=1, name='JVM构造原理', price=50.2}, Book{id=3, name='JDK8实践', price=34.7}]}", partitioningBy.toString());
+    }
+
+    /**
+     * List转Map
+     */
+    @Test
+    public void testToMap() {
+        Map<Long, String> bookMap = books.stream().collect(Collectors.toMap((book) -> book.getId(), (book) -> book.getName()));
+
+        Assert.assertEquals("{1=JVM构造原理, 2=Mavan实践, 3=JDK8实践}", bookMap.toString());
+    }
+
+    @Test
+    public void testToConcurrentMap(){
+        ConcurrentMap<Long, String> bookMap = books.stream().collect(Collectors.toConcurrentMap((book) -> book.getId(), (book) -> book.getName()));
+
+        Assert.assertEquals("{1=JVM构造原理, 2=Mavan实践, 3=JDK8实践}", bookMap.toString());
+    }
+
+    @Test
+    public void testToSet(){
+        Set<Book> bookSet = books.stream().collect(Collectors.toSet());
+        Assert.assertEquals("[Book{id=2, name='Mavan实践', price=10.4}, Book{id=3, name='JDK8实践', price=34.7}, Book{id=1, name='JVM构造原理', price=50.2}]", bookSet.toString());
     }
 
 }
