@@ -2,16 +2,25 @@
 
 java版本特性示例
 
+## [java7-feature-samples](./java7-feature-samples)
+
+Java7特性示例
+
+### Phaser
+
+- [Phaser示例](java7-feature-samples/src/test/java/cn/chenzw/java7/feature/util/concurrent/PhaserTest.java)
+
+阶段器
 
 ## [java8-feature-samples](./java8-feature-samples)
 
 Java8特性示例
 
-#### lambada
+### lambada
 
 - [Lambad示例](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/LambdaTest.java)：lambad写法示例
 
-#### stream接口
+### stream接口
 
 - [Colloctors类](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/util/stream/ColloctorsTest.java): 对数组、列表进行转换
   - counting(): 统计元素个数
