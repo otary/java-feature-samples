@@ -60,9 +60,9 @@ Java8特性示例
   - ToLongFunction<T>: 接收一个参数并返回long结果的函数
 
 - [Consumer接口](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/util/function/ConsumerTest.java): 接收一个参数，无返回值
-
+  - BiConsumer：接收2个参数，无返回值
 - [Predicate接口](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/util/function/PredicateTest.java): 接收一个参数，返回Boolean值
-
+  - BitPredicate: 接收2个参数，返回Boolean
 - [Supplier接口](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/util/function/SupplierTest.java): 无参数，返回一个结果
 
 
