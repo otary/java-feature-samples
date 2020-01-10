@@ -142,17 +142,36 @@ public class ColloctorsTest {
         Assert.assertEquals("{1=JVM构造原理, 2=Mavan实践, 3=JDK8实践}", bookMap.toString());
     }
 
+    /**
+     * List转ConcurrentMap
+     */
     @Test
-    public void testToConcurrentMap(){
+    public void testToConcurrentMap() {
         ConcurrentMap<Long, String> bookMap = books.stream().collect(Collectors.toConcurrentMap((book) -> book.getId(), (book) -> book.getName()));
 
         Assert.assertEquals("{1=JVM构造原理, 2=Mavan实践, 3=JDK8实践}", bookMap.toString());
     }
 
+    /**
+     * List转Set
+     */
     @Test
-    public void testToSet(){
+    public void testToSet() {
         Set<Book> bookSet = books.stream().collect(Collectors.toSet());
         Assert.assertEquals("[Book{id=2, name='Mavan实践', price=10.4}, Book{id=3, name='JDK8实践', price=34.7}, Book{id=1, name='JVM构造原理', price=50.2}]", bookSet.toString());
+    }
+
+    /**
+     * 去重
+     */
+    @Test
+    public void testComparing() {
+        List<Book> uniqueBooks = books.stream().collect(
+                Collectors.collectingAndThen(Collectors.toCollection(
+                        () -> new TreeSet<>(Comparator.comparing(o -> o.getName()))), ArrayList::new)
+        );
+
+        Assert.assertEquals("[Book{id=3, name='JDK8实践', price=34.7}, Book{id=1, name='JVM构造原理', price=50.2}, Book{id=2, name='Mavan实践', price=10.4}]", uniqueBooks.toString());
     }
 
 }
