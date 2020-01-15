@@ -1,11 +1,15 @@
 package cn.chenzw.java7.feature.util.concurrent;
 
+import cn.chenzw.java7.feature.domain.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -67,7 +71,6 @@ public class ExecutorServiceTest {
         });
 
         AtomicInteger count = new AtomicInteger(1);
-
         // 内部任务异常需要进行捕获处理，否则定时任务会退出
         scheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -86,6 +89,62 @@ public class ExecutorServiceTest {
         }, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduledThreadPoolExecutor.isTerminated()) {
+            TimeUnit.SECONDS.sleep(1);
+        }
+    }
+
+    List list = Collections.synchronizedList(new ArrayList<User>());
+
+    @Test
+    public void testSynchronizedList() throws InterruptedException {
+
+        // 定时将list中的数据写出
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (list.size() > 10) {
+                        List<User> newList = new ArrayList<>();
+                        Collections.addAll(newList, new User[list.size()]);
+                        Collections.copy(newList, list);
+                        list = Collections.synchronizedList(new ArrayList<User>());
+
+                        logger.info("{}", newList);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+
+
+        // 不断往列表中写入数据
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 5, 0, TimeUnit.SECONDS,
+                new SynchronousQueue<>());
+        AtomicInteger count = new AtomicInteger(1);
+        for (int i = 0; i < 5; i++) {
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    for (int j = 0; j < 100000; j++) {
+                        User user = new User();
+                        int n = count.getAndIncrement();
+                        user.setId((long) n);
+                        user.setName("n" + n);
+                        list.add(user);
+
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
+
+        while (!scheduledExecutorService.isTerminated()) {
             TimeUnit.SECONDS.sleep(1);
         }
     }
