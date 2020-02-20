@@ -65,6 +65,7 @@ Java8特性示例
   - BitPredicate: 接收2个参数，返回Boolean
 - [Supplier接口](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/util/function/SupplierTest.java): 无参数，返回一个结果
 
+- [Runnable](java8-feature-samples/src/test/java/cn/chenzw/java8/feature/util/function): 无参数，无返回值
 
 ## [java9-feature-samples](./java9-feature-samples)
 

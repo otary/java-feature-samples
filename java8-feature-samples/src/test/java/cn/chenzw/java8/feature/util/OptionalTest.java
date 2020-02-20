@@ -36,12 +36,18 @@ public class OptionalTest {
         Assert.assertFalse(intOptional2.isPresent());
     }
 
+    /**
+     * of
+     */
     @Test(expected = NullPointerException.class)
     public void testOptionalOfNull() {
         Optional.of(null);
     }
 
 
+    /**
+     * filter
+     */
     @Test
     public void testOptionalFilter() {
 
@@ -52,6 +58,9 @@ public class OptionalTest {
         Assert.assertFalse(bookOptional.isPresent());
     }
 
+    /**
+     * empty
+     */
     @Test
     public void testEmpty() {
         Optional<Object> empty = Optional.empty();
