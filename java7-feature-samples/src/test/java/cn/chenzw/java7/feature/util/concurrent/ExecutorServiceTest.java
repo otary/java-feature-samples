@@ -70,7 +70,7 @@ public class ExecutorServiceTest {
             }
         });
 
-        AtomicInteger count = new AtomicInteger(1);
+        final AtomicInteger count = new AtomicInteger(1);
         // 内部任务异常需要进行捕获处理，否则定时任务会退出
         scheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -121,8 +121,8 @@ public class ExecutorServiceTest {
 
         // 不断往列表中写入数据
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 5, 0, TimeUnit.SECONDS,
-                new SynchronousQueue<>());
-        AtomicInteger count = new AtomicInteger(1);
+                new SynchronousQueue<Runnable>());
+        final AtomicInteger count = new AtomicInteger(1);
         for (int i = 0; i < 5; i++) {
             threadPoolExecutor.execute(new Runnable() {
                 @Override

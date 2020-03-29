@@ -9,6 +9,7 @@ Java7特性示例
 ### Phaser
 
 - [Phaser示例](java7-feature-samples/src/test/java/cn/chenzw/java7/feature/util/concurrent/PhaserTest.java)
+- [Proxy示例](java7-feature-samples/src/test/java/cn/chenzw/java7/feature/lang/reflect/ProxyTests.java)
 
 阶段器
 
@@ -84,4 +85,5 @@ Java11特性示例
 java其它特性示例
 
 - [MessageFormat](javax-feature-samples/src/test/java/cn/chenzw/java/feature/text/MessageFormatTests.java): 字符串模版格式化(类似于String.format())
-
+- [FutrueTask](javax-feature-samples/src/test/java/cn/chenzw/java/feature/util/concurrent/MakeTeaTests.java): 带参数、带返回值的任务
+![](javax-feature-samples/images/maketea.png)
