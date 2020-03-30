@@ -1,5 +1,6 @@
 package cn.chenzw.java7.feature.lang.reflect;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -18,16 +19,27 @@ public class ProxyTests {
 
     static Logger logger = LoggerFactory.getLogger(ProxyTests.class);
 
+
+    /**
+     * 测试
+     */
     @Test
     public void testBasic() {
 
         MyFactory factory = new WuhahaFactory();
 
+        // 动态创建代理
         MyFactory factoryProxy = (MyFactory) Proxy.newProxyInstance(factory.getClass().getClassLoader(),
                 factory.getClass().getInterfaces(), new MyFactoryProxy(factory));
 
         factoryProxy.createProduct();
 
+        // 判断是否代理类
+        Assert.assertTrue(Proxy.isProxyClass(factoryProxy.getClass()));
+
+        // 获取代理类
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(factoryProxy);
+        Assert.assertTrue(invocationHandler instanceof MyFactoryProxy);
     }
 
     /**
