@@ -95,6 +95,11 @@ public class ExecutorServiceTest {
 
     List list = Collections.synchronizedList(new ArrayList<User>());
 
+    /**
+     * SynchronizedList
+     *
+     * @throws InterruptedException
+     */
     @Test
     public void testSynchronizedList() throws InterruptedException {
 
@@ -148,6 +153,7 @@ public class ExecutorServiceTest {
             TimeUnit.SECONDS.sleep(1);
         }
     }
+
 
 
 }
