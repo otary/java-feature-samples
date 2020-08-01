@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,21 +12,18 @@ public class LockTests {
 
 
     @Test
-    public void test() throws InterruptedException {
+    public void test() {
 
         Lock lock = new ReentrantLock();
 
-
-        lock.lock();
-
-        System.out.println(lock.tryLock());
-
-        lock.unlock();
-
-        lock.lock();
-        Thread.sleep(2000);
-        lock.unlock();
-        System.out.println(lock.tryLock());
-
+        try {
+            if (!lock.tryLock()) {
+                Thread.sleep(2000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
     }
 }

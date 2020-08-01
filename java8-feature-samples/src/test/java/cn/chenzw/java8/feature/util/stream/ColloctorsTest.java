@@ -112,7 +112,7 @@ public class ColloctorsTest {
 
 
     /**
-     * 排序
+     * 排序（list => map）
      */
     @Test
     public void testGroupBy() {
@@ -123,7 +123,7 @@ public class ColloctorsTest {
 
 
     /**
-     * 分组
+     * 分组（list => map）
      */
     @Test
     public void testPartitioningBy() {
