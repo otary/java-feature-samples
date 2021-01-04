@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -140,6 +141,22 @@ public class ColloctorsTest {
         Map<Long, String> bookMap = books.stream().collect(Collectors.toMap((book) -> book.getId(), (book) -> book.getName()));
 
         Assert.assertEquals("{1=JVM构造原理, 2=Mavan实践, 3=JDK8实践}", bookMap.toString());
+    }
+
+    /**
+     * Map => Map（修改key）
+     */
+    @Test
+    public void testChangeMapKey() {
+        // 对id=2的key转换成id=9
+        Map<Long, String> bookMap = books.stream().collect(Collectors.toMap(book -> {
+            if (book.getId().longValue() == 2) {
+                return 9L;
+            }
+            return book.getId();
+        }, (book) -> book.getName()));
+
+        Assert.assertEquals("{1=JVM构造原理, 3=JDK8实践, 9=Mavan实践}", bookMap.toString());
     }
 
     /**
