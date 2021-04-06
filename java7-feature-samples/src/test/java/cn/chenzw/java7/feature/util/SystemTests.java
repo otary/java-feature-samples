@@ -19,5 +19,7 @@ public class SystemTests {
 
         Map<String, String> envMap = System.getenv();
         log.info("System.getenv => {}", envMap);
+
     }
+
 }

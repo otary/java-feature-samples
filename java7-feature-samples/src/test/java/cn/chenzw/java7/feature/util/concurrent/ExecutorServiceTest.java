@@ -70,6 +70,8 @@ public class ExecutorServiceTest {
             }
         });
 
+
+
         final AtomicInteger count = new AtomicInteger(1);
         // 内部任务异常需要进行捕获处理，否则定时任务会退出
         scheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
