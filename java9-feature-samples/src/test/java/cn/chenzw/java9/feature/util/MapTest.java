@@ -1,13 +1,11 @@
 package cn.chenzw.java9.feature.util;
 
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.HashMap;
 import java.util.Map;
 
