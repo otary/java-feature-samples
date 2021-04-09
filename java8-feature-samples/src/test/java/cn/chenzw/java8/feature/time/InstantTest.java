@@ -7,6 +7,9 @@ import org.junit.runners.JUnit4;
 
 import java.time.Instant;
 
+/**
+ * 精确到纳秒
+ */
 @RunWith(JUnit4.class)
 public class InstantTest {
 

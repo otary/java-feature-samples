@@ -1,7 +1,6 @@
 package cn.chenzw.java8.feature.util.stream;
 
 import cn.chenzw.java8.feature.domain.Book;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -14,8 +13,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -128,6 +125,16 @@ public class StreamTest {
 
 
     /**
+     * 排序
+     */
+    @Test
+    public void testStreamSort() {
+        List<Book> books = StreamTest.books.stream().sorted(Comparator.comparing(Book::getPrice)).collect(toList());
+
+        Assert.assertEquals("[Book{id=2, name='Mavan实践', price=10.4}, Book{id=3, name='JDK8实践', price=34.7}, Book{id=1, name='JVM构造原理', price=50.2}]", books.toString());
+    }
+
+    /**
      * 每次传入上一次计算结果的值
      */
     @Test
@@ -147,6 +154,7 @@ public class StreamTest {
         Assert.assertEquals(1, min);
     }
 
+
     /**
      * 遍历
      */
@@ -165,7 +173,7 @@ public class StreamTest {
         Integer[] intArray = {1, 2, 3, 4, 3, 5};
         Stream<Integer> distinct = Stream.of(intArray).distinct();
 
-        Assert.assertEquals(new Integer[]{1, 2, 3, 4, 5}, distinct.toArray());
+        Assert.assertArrayEquals(new Integer[]{1, 2, 3, 4, 5}, distinct.toArray());
     }
 
 
@@ -188,7 +196,7 @@ public class StreamTest {
         Integer[] intArray = {1, 2, 3, 4, 3, 5};
         Stream<Integer> skip = Stream.of(intArray).skip(3);
 
-        Assert.assertEquals(new Integer[]{4, 3, 5}, skip.toArray());
+        Assert.assertArrayEquals(new Integer[]{4, 3, 5}, skip.toArray());
     }
 
     /**
@@ -203,7 +211,36 @@ public class StreamTest {
         Stream<String> flatMap = Stream.of(words)
                 .flatMap(Arrays::stream);
 
-        Assert.assertEquals(new String[]{"H", "e", "l", "l", "o", "W", "o", "r", "d"}, flatMap.toArray());
+        Assert.assertArrayEquals(new String[]{"H", "e", "l", "l", "o", "W", "o", "r", "d"}, flatMap.toArray());
+    }
+
+    /**
+     * 转换成Int类型数组
+     */
+    @Test
+    public void testStreamMapToInt() {
+        String[] nums = new String[]{"12", "34", "56"};
+
+        // 使用toArray方式
+        int[] results = Stream.of(nums).mapToInt(Integer::valueOf).toArray();
+        Assert.assertArrayEquals(new int[]{12, 34, 56}, results);
+
+        // 使用collect方式（不推荐）
+        List<Integer> results2 = Stream.of(nums).mapToInt(Integer::valueOf).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        Assert.assertArrayEquals(new Integer[]{12, 34, 56}, results2.toArray(new Integer[3]));
+    }
+
+
+    /**
+     * 转换成Long类型数组
+     */
+    @Test
+    public void testStreamMapToLong() {
+        String[] nums = new String[]{"12", "34", "56"};
+
+        long[] results = Stream.of(nums).mapToLong(Long::valueOf).toArray();
+        Assert.assertArrayEquals(new long[]{12, 34, 56}, results);
+
     }
 
 
@@ -266,7 +303,7 @@ public class StreamTest {
      * 并行流
      */
     @Test
-    public void testParallelStream(){
+    public void testParallelStream() {
         // 串行流
         books.stream().forEach(System.out::println);
 

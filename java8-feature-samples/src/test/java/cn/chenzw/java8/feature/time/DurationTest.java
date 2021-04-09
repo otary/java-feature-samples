@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @RunWith(JUnit4.class)
 public class DurationTest {
 
+    /**
+     * 计算时间间隔
+     */
     @Test
     public void testDurationBetween() {
 
