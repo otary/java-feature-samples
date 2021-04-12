@@ -20,8 +20,8 @@ import java.util.concurrent.FutureTask;
  */
 @RunWith(JUnit4.class)
 public class MakeTeaTests {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 使用Join阻塞合并

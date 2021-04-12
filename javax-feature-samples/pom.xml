@@ -18,4 +18,13 @@
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
+    </dependencies>
+
 </project>
