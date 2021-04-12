@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * 多态
  */
@@ -121,6 +123,12 @@ public class PolymorphicTests {
         Man man2 = new Man();
         Assert.assertEquals("man", man2.name);  // 根据静态类型分派
 
+    }
+
+    @Test
+    public void test() throws UnsupportedEncodingException {
+        byte[] bytes = "一".getBytes("UTF-16");
+        System.out.println(bytes.length);
     }
 
 
