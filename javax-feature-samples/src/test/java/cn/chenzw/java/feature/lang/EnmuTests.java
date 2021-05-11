@@ -38,7 +38,11 @@ public class EnmuTests {
     }
 
 
-   /* 反编译
+    /**
+     * 反编译（本质继承了Enum）
+     *
+     */
+   /*
    public final class Color extends java.lang.Enum<Color> {
         public static final Color RED;
         public static final Color YELLOW;
