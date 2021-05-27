@@ -22,7 +22,7 @@ public class ThreadPoolExecutorTest {
     @Test(expected = RejectedExecutionException.class)
     public void testRejectedExecutionException() {
         // 自定义一个线程池
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 20, 0, TimeUnit.SECONDS, new SynchronousQueue<>(), new ThreadFactory() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 20, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ThreadFactory() {
             // 指定线程ID
             private final AtomicInteger threadId = new AtomicInteger(1);
 
@@ -50,7 +50,7 @@ public class ThreadPoolExecutorTest {
     public void test() throws InterruptedException {
 
         // 自定义一个线程池
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 20, 0, TimeUnit.SECONDS, new LinkedBlockingDeque<>(10), new ThreadFactory() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 20, 0, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(10), new ThreadFactory() {
 
             // 指定线程ID
             private final AtomicInteger threadId = new AtomicInteger(1);
@@ -84,7 +84,7 @@ public class ThreadPoolExecutorTest {
         // 丢弃最老的那个
         // threadPoolExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
 
-        AtomicInteger count = new AtomicInteger(0);
+        final AtomicInteger count = new AtomicInteger(0);
         for (int i = 0; i < 200; i++) {
             final int index = i;
             threadPoolExecutor.submit(new Runnable() {
