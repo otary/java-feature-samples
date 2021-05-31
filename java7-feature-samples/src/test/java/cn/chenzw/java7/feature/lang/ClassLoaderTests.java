@@ -1,6 +1,7 @@
 package cn.chenzw.java7.feature.lang;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,5 +47,18 @@ public class ClassLoaderTests {
             }
         }
         return classLoader;
+    }
+
+    @Test
+    public void test() {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+        Assert.assertEquals("class sun.misc.Launcher$AppClassLoader", contextClassLoader.getClass().toString());
+        Assert.assertEquals("class sun.misc.Launcher$ExtClassLoader", contextClassLoader.getParent().getClass().toString());
+
+
+        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+        Assert.assertEquals("class sun.misc.Launcher$AppClassLoader", systemClassLoader.getClass().toString());
+
     }
 }
