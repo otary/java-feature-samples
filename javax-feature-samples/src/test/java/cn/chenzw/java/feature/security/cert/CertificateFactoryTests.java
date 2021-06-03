@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
@@ -33,22 +32,12 @@ public class CertificateFactoryTests {
         log.info("证书生效日期 => {}", x509Certificate.getNotBefore());
         log.info("证书失效日期 => {}", x509Certificate.getNotAfter());
 
+        log.info("证书拥有者 => {}", x509Certificate.getSubjectDN().getName());
+        log.info("证书颁发者 => {}", x509Certificate.getIssuerDN().getName());
+        log.info("证书签名算法 => {}", x509Certificate.getSigAlgName());
 
-//        //获得证书版本
-//        System.out.println("证书生效日期:"+info);
-//        Date afterdate = oCert.getNotAfter();
-//        info = dateformat.format(afterdate);
-//        System.out.println("证书失效日期:"+info);
-//        //获得证书主体信息
-//        info = oCert.getSubjectDN().getName();
-//        System.out.println("证书拥有者:"+info);
-//        //获得证书颁发者信息
-//        info = oCert.getIssuerDN().getName();
-//        System.out.println("证书颁发者:"+info);
-//        //获得证书签名算法名称
-//        info = oCert.getSigAlgName();
-//        System.out.println("证书签名算法:"+info);
-
+        byte[] publicKey = x509Certificate.getPublicKey().getEncoded();
+        log.info("证书 =>", new String(publicKey));
 
     }
 }
