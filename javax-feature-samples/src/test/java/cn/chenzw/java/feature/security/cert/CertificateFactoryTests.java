@@ -37,7 +37,9 @@ public class CertificateFactoryTests {
         log.info("证书签名算法 => {}", x509Certificate.getSigAlgName());
 
         byte[] publicKey = x509Certificate.getPublicKey().getEncoded();
-        log.info("证书 =>", new String(publicKey));
+        log.info("证书公钥 =>", new String(publicKey));
+
+        log.info("{}", x509Certificate);
 
     }
 }
