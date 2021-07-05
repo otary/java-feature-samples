@@ -51,6 +51,7 @@ public class InputOutputStreamTests {
         for (int i = 0; i < 10; i++) {
             ZipEntry zipEntry = new ZipEntry("test"+ i +".txt");
             zos.putNextEntry(zipEntry);
+
             String content = "内容" + i;
             zos.write(content.getBytes(), 0, content.getBytes().length);
 
