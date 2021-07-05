@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -56,10 +57,48 @@ public class ImageIOTests {
         log.info("Type => {}", bufferedImage.getType());
         log.info("透明度 => {}", bufferedImage.getTransparency());
         log.info("getTileWidth => {}", bufferedImage.getTileWidth());
+    }
 
+    /**
+     * 加水印
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testAddWaterMask() throws IOException {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/flower.jpg");
+        BufferedImage bufferedImage = ImageIO.read(is);
 
+        int imageWidth = bufferedImage.getWidth();
+        int imageHeight = bufferedImage.getHeight();
 
+        // 加水印层
+        BufferedImage bufImg =
+                new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        //获取 Graphics2D 对象
+        Graphics2D g = bufImg.createGraphics();
+        //设置绘图区域
+        g.drawImage(bufferedImage, 0, 0, imageWidth, imageHeight, null);
+        //设置字体
+        Font font = new Font("宋体", Font.PLAIN, 20);
+        // 根据图片的背景设置水印颜色
+        g.setColor(Color.green);
+        g.setFont(font);
 
-        //   ImageIO.read(is);
+        String waterMaskText = "测试水印";
+        //获取文字长度
+        int len = g.getFontMetrics(
+                g.getFont()).charsWidth(waterMaskText.toCharArray(),
+                0, waterMaskText.length());
+        int x = imageWidth - len - 10;
+        int y = imageHeight - 20;
+        g.drawString(waterMaskText, x, y);
+        g.dispose();
+
+        File resultFile = new File("result/flower.png");
+        if (!resultFile.getParentFile().exists()) {
+            resultFile.getParentFile().mkdirs();
+        }
+        ImageIO.write(bufferedImage, "png", resultFile);
     }
 }

@@ -6,11 +6,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @RunWith(JUnit4.class)
@@ -35,7 +34,7 @@ public class InputOutputStreamTests {
 
 
     @Test
-    public void test() throws IOException {
+    public void testZipInputStream() throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("io/test.zip");
         ZipInputStream zis = new ZipInputStream(is);
         ZipEntry zipEntry = null;
@@ -43,8 +42,22 @@ public class InputOutputStreamTests {
             String name = zipEntry.getName();
             System.out.println(name);
         }
-
         zis.close();
+    }
+
+    @Test
+    public void testZipOutputStream() throws IOException {
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File("result.zip")));
+        for (int i = 0; i < 10; i++) {
+            ZipEntry zipEntry = new ZipEntry("test"+ i +".txt");
+            zos.putNextEntry(zipEntry);
+            String content = "内容" + i;
+            zos.write(content.getBytes(), 0, content.getBytes().length);
+
+            zos.closeEntry();
+        }
+        zos.finish();
+        zos.close();
     }
 
 
