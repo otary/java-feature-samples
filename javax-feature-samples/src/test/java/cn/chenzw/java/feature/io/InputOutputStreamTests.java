@@ -49,7 +49,7 @@ public class InputOutputStreamTests {
     public void testZipOutputStream() throws IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File("result.zip")));
         for (int i = 0; i < 10; i++) {
-            ZipEntry zipEntry = new ZipEntry("test"+ i +".txt");
+            ZipEntry zipEntry = new ZipEntry("pp" + i + "/test"+ i +".txt");
             zos.putNextEntry(zipEntry);
 
             String content = "内容" + i;
