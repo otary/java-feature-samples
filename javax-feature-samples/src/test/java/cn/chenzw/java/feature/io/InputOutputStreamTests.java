@@ -1,10 +1,12 @@
 package cn.chenzw.java.feature.io;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import sun.nio.ch.IOUtil;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -49,7 +51,7 @@ public class InputOutputStreamTests {
     public void testZipOutputStream() throws IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File("result.zip")));
         for (int i = 0; i < 10; i++) {
-            ZipEntry zipEntry = new ZipEntry("pp" + i + "/test"+ i +".txt");
+            ZipEntry zipEntry = new ZipEntry("pp" + i + "/test" + i + ".txt");
             zos.putNextEntry(zipEntry);
 
             String content = "内容" + i;
@@ -61,5 +63,31 @@ public class InputOutputStreamTests {
         zos.close();
     }
 
+
+    /**
+     * 根据字节流判断文件类型
+     */
+    @Test
+    public void testGetFileType() throws IOException {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("io/test.pdf");
+
+        // 缓存is
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buff = new byte[1024];
+        int bytesRead = 0;
+        while ((bytesRead = is.read(buff)) != -1) {
+            baos.write(buff, 0, bytesRead);
+        }
+
+        //
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+        // 读取文件的前4个字节来判断文件类型
+        byte[] bytes = new byte[8];
+        bais.read(bytes, 0, 8);
+
+        String type = Hex.encodeHexString(bytes).toUpperCase();
+        log.info("type => {}", type);
+    }
 
 }
