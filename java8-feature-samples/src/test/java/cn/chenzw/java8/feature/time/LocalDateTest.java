@@ -1,5 +1,6 @@
 package cn.chenzw.java8.feature.time;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * 日期
  */
+@Slf4j
 @RunWith(JUnit4.class)
 public class LocalDateTest {
 
@@ -21,7 +23,7 @@ public class LocalDateTest {
     public void testNow() {
         LocalDate now = LocalDate.now();
 
-        System.out.println(now);  // => 2019-08-07
+        log.info("=> {}", now);  // => 2019-08-07
     }
 
 
@@ -111,8 +113,14 @@ public class LocalDateTest {
 
         // 自定义
         Assert.assertEquals("2019-11-03", date.plus(1, ChronoUnit.MONTHS).plus(2, ChronoUnit.DAYS).toString());
+    }
 
+    @Test
+    public void testParse() {
+        // 只能解析日期，不能带时间
+        LocalDate date = LocalDate.parse("2021-10-01");
 
+        log.info(" => {}", date);
     }
 
 
