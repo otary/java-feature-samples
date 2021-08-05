@@ -28,9 +28,9 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * 证书
@@ -128,10 +128,7 @@ public class CertificateFactoryTests {
 
 
         // 生成私钥文件
-
-
     }
-
 
     private String generatePem(X509Certificate certificate) throws CertificateEncodingException {
         Base64.Encoder encoder = Base64.getEncoder();
@@ -143,7 +140,5 @@ public class CertificateFactoryTests {
         String pemCert = certBegin + pemCertPre + certEnd;
         return pemCert;
     }
-
-
 
 }

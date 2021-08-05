@@ -2,11 +2,9 @@ package cn.chenzw.java.feature.io;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import sun.nio.ch.IOUtil;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
