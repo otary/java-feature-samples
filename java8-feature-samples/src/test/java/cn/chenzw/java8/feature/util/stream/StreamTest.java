@@ -215,6 +215,21 @@ public class StreamTest {
     }
 
     /**
+     * 合并多个List
+     */
+    @Test
+    public void testListFlatMap() {
+        List<String> a1 = Arrays.asList("1", "2", "3");
+        List<String> a2 = Arrays.asList("4", "5", "6");
+
+        List<String> lists = Arrays.asList(a1, a2).stream()
+                .flatMap(Collection::stream)
+                .collect(toList());
+
+        Assert.assertEquals("[1, 2, 3, 4, 5, 6]", lists.toString());
+    }
+
+    /**
      * 转换成Int类型数组
      */
     @Test
