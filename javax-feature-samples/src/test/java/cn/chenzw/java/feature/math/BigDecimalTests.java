@@ -30,15 +30,22 @@ public class BigDecimalTests {
     @Test
     public void testScale() {
         BigDecimal a = new BigDecimal(203.23553456);
-        a = a.setScale(2, RoundingMode.HALF_UP);  // 五入
-
+        a = a.setScale(2, BigDecimal.ROUND_HALF_UP);  // 根据保留数字后一位>=5进行四舍五入
         Assert.assertEquals("203.24", a.toString());
         Assert.assertFalse(a.compareTo(new BigDecimal(203.24)) == 0);  // 精度后不相等
 
         BigDecimal a2 = new BigDecimal(203.25553456);
-        a2 = a2.setScale(2, RoundingMode.HALF_DOWN);  // 五舍?
-
+        a2 = a2.setScale(2, BigDecimal.ROUND_HALF_DOWN);  // 根据保留数字后一位>5进行四舍五入
         Assert.assertEquals("203.26", a2.toString());
+
+        BigDecimal a3 = new BigDecimal(203.25553456);
+        a3 = a3.setScale(2, BigDecimal.ROUND_DOWN);  // 保留指定的位数，后面所有直接去除
+        Assert.assertEquals("203.25", a3.toString());
+
+        BigDecimal a4 = new BigDecimal(203.25553456);
+        a4 = a4.setScale(2, BigDecimal.ROUND_UP);  // 不管保留数字后面是大是小(0除外)都会进1
+        Assert.assertEquals("203.26", a4.toString());
+
 
 
     }

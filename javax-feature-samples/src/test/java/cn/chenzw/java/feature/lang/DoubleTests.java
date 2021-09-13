@@ -35,9 +35,10 @@ public class DoubleTests {
 
         double result = (s - t) / t * 100 / x;
 
+        // 取2位小数
         BigDecimal bigDecimal = new BigDecimal(result);
         BigDecimal roundDown = bigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
 
-        log.info("BigDecimal.ROUND_DOWN => {}", roundDown);
+        log.info("BigDecimal.ROUND_DOWN => {}", roundDown.doubleValue());
     }
 }
