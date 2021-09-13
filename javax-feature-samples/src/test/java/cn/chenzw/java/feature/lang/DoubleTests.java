@@ -1,13 +1,14 @@
 package cn.chenzw.java.feature.lang;
 
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
 
+@Slf4j
 @RunWith(JUnit4.class)
 public class DoubleTests {
 
@@ -32,16 +33,11 @@ public class DoubleTests {
         Double s = new Double("12");
         Double x = new Double("3");
 
-        System.out.println((s - t)/t * 100 / 3);
+        double result = (s - t) / t * 100 / x;
 
+        BigDecimal bigDecimal = new BigDecimal(result);
+        BigDecimal roundDown = bigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
 
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-
-        for (int i = 1; i <= 12; i++) {
-            String month = year + StringUtils.leftPad(String.valueOf(i), 2, "0");
-
-            System.out.println(month);
-        }
-
+        log.info("BigDecimal.ROUND_DOWN => {}", roundDown);
     }
 }
