@@ -1,12 +1,14 @@
 package cn.chenzw.java8.feature.util.stream;
 
 import cn.chenzw.java8.feature.domain.Book;
+import cn.chenzw.java8.feature.domain.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -22,11 +24,20 @@ public class ColloctorsTest {
 
     private static List<Book> books = new ArrayList<>();
 
+    private static List<User> users = new ArrayList<>();
+
+
     @BeforeClass
     public static void init() {
         books.add(new Book(1L, "JVM构造原理", 50.2));
         books.add(new Book(2L, "Mavan实践", 10.4));
         books.add(new Book(3L, "JDK8实践", 34.7));
+
+        users.add(new User("张三", new Date(121, 10, 12)));
+        users.add(new User("李素", new Date(122, 10, 12)));
+        users.add(new User("王五", new Date(121, 9, 22)));
+        users.add(new User("赵六", new Date(121, 6, 17)));
+        users.add(new User("坤七", new Date(121, 10, 8)));
     }
 
 
@@ -113,13 +124,25 @@ public class ColloctorsTest {
 
 
     /**
-     * 排序（list => map）
+     * 分组（list => map）
      */
     @Test
     public void testGroupBy() {
         Map<Double, List<Book>> groupBy = books.stream().collect(Collectors.groupingBy((book) -> book.getPrice()));
 
         Assert.assertEquals("{50.2=[Book{id=1, name='JVM构造原理', price=50.2}], 10.4=[Book{id=2, name='Mavan实践', price=10.4}], 34.7=[Book{id=3, name='JDK8实践', price=34.7}]}", groupBy.toString());
+    }
+
+    /**
+     * 分组（根据Date）
+     */
+    @Test
+    public void testGroupByDate() {
+        // 按月份分组
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Map<Object, List<User>> groupByDate = users.stream().collect(Collectors.groupingBy(user -> sdf.format(user.getBirthDate())));
+
+        System.out.println(groupByDate);
     }
 
 
