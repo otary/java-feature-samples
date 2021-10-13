@@ -152,6 +152,11 @@ public class StreamTest {
 
         int min = Stream.of(intArray).reduce(Integer::min).orElse(0).intValue();
         Assert.assertEquals(1, min);
+
+        // 如果是对象，则先提取数值字段，再进行相加
+        double sum3 = books.stream().mapToDouble(book -> book.getPrice()).reduce(Double::sum).getAsDouble();
+        // Assert.assertTrue(Double.valueOf("95.3").compareTo(sum3) == 0);
+
     }
 
 
