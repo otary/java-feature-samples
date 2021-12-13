@@ -13,6 +13,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.IntUnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -345,5 +348,19 @@ public class StreamTest {
         books.parallelStream().forEachOrdered(System.out::println);
     }
 
+
+    @Test
+    public void testStreamRange() {
+        List<Integer> list = IntStream.range(0, 10).map(new IntUnaryOperator() {
+
+            @Override
+            public int applyAsInt(int operand) {
+                return 0;
+            }
+
+        }).boxed().collect(toList());
+
+        Assert.assertEquals("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]", list.toString());
+    }
 
 }
