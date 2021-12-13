@@ -161,13 +161,25 @@ public class StreamTest {
 
 
     /**
-     * 遍历
+     * 遍历（forEach后返回的是void）
      */
     @Test
     public void testStreamForEach() {
         books.stream().forEach(book -> {
             System.out.println(book);
         });
+    }
+
+    /**
+     * 遍历（类似于ForEach，但返回Stream）
+     */
+    @Test
+    public void testStreamPeek() {
+        List<Book> list = books.stream().peek(book -> {
+            book.setName("xxx");
+        }).collect(toList());
+
+        Assert.assertEquals("[Book{id=1, name='xxx', price=50.2}, Book{id=2, name='xxx', price=10.4}, Book{id=3, name='xxx', price=34.7}]", list.toString());
     }
 
     /**
