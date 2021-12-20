@@ -13,6 +13,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.IntUnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -161,13 +164,25 @@ public class StreamTest {
 
 
     /**
-     * 遍历
+     * 遍历（forEach后返回的是void）
      */
     @Test
     public void testStreamForEach() {
         books.stream().forEach(book -> {
             System.out.println(book);
         });
+    }
+
+    /**
+     * 遍历（类似于ForEach，但返回Stream）
+     */
+    @Test
+    public void testStreamPeek() {
+        List<Book> list = books.stream().peek(book -> {
+            book.setName("xxx");
+        }).collect(toList());
+
+        Assert.assertEquals("[Book{id=1, name='xxx', price=50.2}, Book{id=2, name='xxx', price=10.4}, Book{id=3, name='xxx', price=34.7}]", list.toString());
     }
 
     /**
@@ -333,5 +348,19 @@ public class StreamTest {
         books.parallelStream().forEachOrdered(System.out::println);
     }
 
+
+    @Test
+    public void testStreamRange() {
+        List<Integer> list = IntStream.range(0, 10).map(new IntUnaryOperator() {
+
+            @Override
+            public int applyAsInt(int operand) {
+                return 0;
+            }
+
+        }).boxed().collect(toList());
+
+        Assert.assertEquals("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]", list.toString());
+    }
 
 }

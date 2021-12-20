@@ -52,7 +52,6 @@ public class LambdaTest {
         // Comparator<Book> comparator = Comparator.comparing(Book::getPrice);
         Collections.sort(books, comparator);
 
-
         books.stream().forEach((book) -> System.out.println(book));
         // 简化写法
         books.stream().forEach(System.out::println);
