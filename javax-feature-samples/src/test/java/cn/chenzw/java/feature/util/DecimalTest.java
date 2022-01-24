@@ -45,6 +45,15 @@ public class DecimalTest {
         BigDecimal bd = new BigDecimal(dd);
         log.info("BigDecimal => {}", bd.setScale(2, RoundingMode.HALF_UP).doubleValue());
 
+        // long相除
+        Long a = 1920394L;
+        Long b = 1000L;
+        double result = a / b;
+        log.info("long相除结果 => {}", result);
+
+        // 先转double再相除
+        double result2 = a.doubleValue() / b.doubleValue();
+        log.info("long相除结果2 => {}", result2);
     }
 
 
