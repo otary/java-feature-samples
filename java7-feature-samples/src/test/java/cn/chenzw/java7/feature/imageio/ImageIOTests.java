@@ -6,12 +6,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Iterator;
 
 @Slf4j
 @RunWith(JUnit4.class)
@@ -100,5 +104,55 @@ public class ImageIOTests {
             resultFile.getParentFile().mkdirs();
         }
         ImageIO.write(bufferedImage, "png", resultFile);
+    }
+
+    /**
+     * 缩放
+     */
+    @Test
+    public void thumbnail() throws IOException {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/flower.jpg");
+        BufferedImage srcImage = ImageIO.read(is);
+
+        //定义一个BufferedImage对象，用于保存缩小后的位图
+        BufferedImage bufferedImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = bufferedImage.getGraphics();
+        graphics.drawImage(srcImage, 0, 0, 500, 500, null);
+        graphics.dispose();
+
+        File resultFile = new File("result/flower.png");
+        if (!resultFile.getParentFile().exists()) {
+            resultFile.getParentFile().mkdirs();
+        }
+        ImageIO.write(bufferedImage, "png", resultFile);
+    }
+
+    @Test
+    public void cut() throws IOException {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/flower.jpg");
+
+        ImageInputStream imageStream = null;
+        try {
+            // 根据图片格式获取ImageReader
+            Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("jpg");
+            ImageReader reader = readers.next();
+            imageStream = ImageIO.createImageInputStream(is);
+            reader.setInput(imageStream, true);
+            ImageReadParam param = reader.getDefaultReadParam();
+
+            // 截取的图片范围
+            Rectangle rect = new Rectangle(0, 0, 500, 100);
+            param.setSourceRegion(rect);
+            BufferedImage bufferedImage = reader.read(0, param);
+
+            File resultFile = new File("result/flower.jpg");
+            if (!resultFile.getParentFile().exists()) {
+                resultFile.getParentFile().mkdirs();
+            }
+            ImageIO.write(bufferedImage, "jpg", resultFile);
+
+        } finally {
+            imageStream.close();
+        }
     }
 }
