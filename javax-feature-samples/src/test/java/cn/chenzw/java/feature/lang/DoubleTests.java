@@ -1,5 +1,6 @@
 package cn.chenzw.java.feature.lang;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Slf4j
 @RunWith(JUnit4.class)
@@ -41,4 +46,5 @@ public class DoubleTests {
 
         log.info("BigDecimal.ROUND_DOWN => {}", roundDown.doubleValue());
     }
+
 }
