@@ -106,11 +106,29 @@ public class ImageIOTests {
         ImageIO.write(bufferedImage, "png", resultFile);
     }
 
-    /**
-     * 缩放
-     */
     @Test
     public void thumbnail() throws IOException {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/flower.jpg");
+        BufferedImage srcImage = ImageIO.read(is);
+
+        //定义一个BufferedImage对象，用于保存缩小后的位图
+        BufferedImage bufferedImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = bufferedImage.getGraphics();
+        graphics.drawImage(srcImage, 0, 0, 100, 100, null);
+        graphics.dispose();
+
+        File resultFile = new File("result/flower.png");
+        if (!resultFile.getParentFile().exists()) {
+            resultFile.getParentFile().mkdirs();
+        }
+        ImageIO.write(bufferedImage, "png", resultFile);
+    }
+
+    /**
+     * 范围截取1
+     */
+    @Test
+    public void cut1() throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/flower.jpg");
         BufferedImage srcImage = ImageIO.read(is);
 
@@ -127,8 +145,11 @@ public class ImageIOTests {
         ImageIO.write(bufferedImage, "png", resultFile);
     }
 
+    /**
+     * 范围截取2
+     */
     @Test
-    public void cut() throws IOException {
+    public void cut2() throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/flower.jpg");
 
         ImageInputStream imageStream = null;
