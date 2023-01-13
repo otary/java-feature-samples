@@ -2,6 +2,7 @@ package cn.chenzw.java8.feature.util.stream;
 
 import cn.chenzw.java8.feature.domain.Book;
 import cn.chenzw.java8.feature.domain.User;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.junit.runners.JUnit4;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +19,7 @@ import java.util.stream.Stream;
  * @see {@link java.util.stream.Collectors}
  * @see {@link Stream#collect(java.util.stream.Collector)}
  */
+@Slf4j
 @RunWith(JUnit4.class)
 public class ColloctorsTest {
 
@@ -103,7 +104,7 @@ public class ColloctorsTest {
      * 平均值
      */
     @Test
-    public void testAverageingInt() {
+    public void testAveragingInt() {
         Integer[] intArray = {14, 5, 29, 9, 10};
         double average = Stream.of(intArray).collect(Collectors.averagingInt((x) -> x.intValue()));
 
@@ -142,7 +143,7 @@ public class ColloctorsTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         Map<Object, List<User>> groupByDate = users.stream().collect(Collectors.groupingBy(user -> sdf.format(user.getBirthDate())));
 
-        System.out.println(groupByDate);
+        log.info("groupByDate=> {}", groupByDate);
     }
 
 
@@ -157,14 +158,22 @@ public class ColloctorsTest {
     }
 
     /**
-     * List转Map
+     * List <=>Map
      */
     @Test
     public void testToMap() {
+        // List => Map
         Map<Long, String> bookMap = books.stream().collect(Collectors.toMap((book) -> book.getId(), (book) -> book.getName()));
 
+        // Map => List
+        List<String> books2 = bookMap.entrySet().stream().map((entity) -> {
+            return entity.getValue();
+        }).collect(Collectors.toList());
+
         Assert.assertEquals("{1=JVM构造原理, 2=Mavan实践, 3=JDK8实践}", bookMap.toString());
+        Assert.assertEquals("[JVM构造原理, Mavan实践, JDK8实践]", books2.toString());
     }
+
 
     /**
      * Map => Map（修改key）

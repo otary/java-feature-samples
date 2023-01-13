@@ -4,17 +4,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import sun.misc.BASE64Encoder;
+import sun.security.pkcs10.PKCS10;
+import sun.security.tools.keytool.CertAndKeyGen;
+import sun.security.x509.X500Name;
 
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.Date;
 
 @Slf4j
 @RunWith(JUnit4.class)
@@ -61,16 +65,16 @@ public class SSLContextTests {
     @Test
     public void testTrustManagerSupport() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
         // 查找本地证书库
-        File cacertsFile = findCacertsFile();
+        File caCertsFile = findCacertsFile();
 
         // keystore默认密码: changeit
         String defaultPassphrase = "changeit";
 
         // 加载KeyStore
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(new FileInputStream(cacertsFile), defaultPassphrase.toCharArray());
+        keyStore.load(new FileInputStream(caCertsFile), defaultPassphrase.toCharArray());
 
-        log.info("Loading KeyStore [{}] Success!", cacertsFile);
+        log.info("Loading KeyStore [{}] Success!", caCertsFile);
 
         TrustManagerFactory trustManagerFactory =
                 TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -108,7 +112,6 @@ public class SSLContextTests {
 //        SSLSocketFactory factory = context.getSocketFactory();
 
 
-
     }
 
     /**
@@ -137,4 +140,63 @@ public class SSLContextTests {
     }
 
 
+    @Test
+    public void testCreateKeyStore() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, NoSuchProviderException, InvalidKeyException, SignatureException {
+        KeyStore keyStore = KeyStore.getInstance("pkcs12");
+        keyStore.load(null, null);
+
+        CertAndKeyGen keyGen = new CertAndKeyGen("RSA", "SHA1WithRSA", null);
+        X500Name x500Name = new X500Name(
+                "com.bqrdh.www", // 通用名称
+                "ff",  // 组织
+                "ffcs",  // 部门
+                "fz",  // 城市
+                "fj",  // 省份
+                "cn" // 国家
+        );
+        int keySize = 2048;
+        keyGen.generate(keySize);
+
+        PrivateKey privateKey = keyGen.getPrivateKey();
+        long validity = 3600; // 有效期 - 10年
+        X509Certificate[] x509Certificate = new X509Certificate[]{
+                keyGen.getSelfCertificate(x500Name, new Date(), (long) validity * 24 * 60 * 60)
+        };
+        String alias = "bqrdh";  // 别名
+        //char[] keyPassword = "123456".toCharArray();  // 密钥口令
+        char[] keyPassword = new char[]{};
+        FileOutputStream fos = new FileOutputStream("a.keystore");
+        keyStore.setKeyEntry(alias, privateKey, keyPassword, x509Certificate);
+        keyStore.store(fos, keyPassword);
+        fos.close();
+    }
+
+
+    @Test
+    public void testCreateCsr() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeyException, IOException, CertificateException, SignatureException {
+        CertAndKeyGen keyGen = new CertAndKeyGen("RSA", "SHA1WithRSA", null);
+        X500Name x500Name = new X500Name(
+                "com.bqrdh.www", // 通用名称
+                "ff",  // 组织
+                "ffcs",  // 部门
+                "fz",  // 城市
+                "fj",  // 省份
+                "cn" // 国家
+        );
+        keyGen.generate(2048);
+
+        PublicKey publicKey = keyGen.getPublicKey();
+        PrivateKey privateKey = keyGen.getPrivateKey();
+        Signature signature = Signature.getInstance("SHA1WithRSA");
+        signature.initSign(privateKey);
+
+        PKCS10 pkcs10 = new PKCS10(publicKey);
+        pkcs10.encodeAndSign(x500Name, signature);
+
+        BASE64Encoder base64 = new BASE64Encoder();
+        String content = base64.encode(pkcs10.getEncoded());
+
+        log.info("{}", content);
+
+    }
 }

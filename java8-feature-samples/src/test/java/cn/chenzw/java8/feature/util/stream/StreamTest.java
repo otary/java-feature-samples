@@ -1,6 +1,7 @@
 package cn.chenzw.java8.feature.util.stream;
 
 import cn.chenzw.java8.feature.domain.Book;
+import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -20,7 +21,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-
+@Slf4j
 @RunWith(JUnit4.class)
 public class StreamTest {
 
@@ -172,6 +173,21 @@ public class StreamTest {
             System.out.println(book);
         });
     }
+
+    /**
+     * Map遍历
+     */
+    @Test
+    public void testMapForEach() {
+        // 先转换个map待测试
+        Map<Long, Book> map = books.stream().collect(Collectors.toMap((book) -> book.getId(), (book) -> book));
+
+        map.entrySet().stream().forEach((item)-> {
+            log.info("item => {}", item);
+        });
+    }
+
+
 
     /**
      * 遍历（类似于ForEach，但返回Stream）
