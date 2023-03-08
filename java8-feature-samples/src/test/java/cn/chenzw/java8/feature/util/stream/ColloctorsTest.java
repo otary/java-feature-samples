@@ -211,7 +211,7 @@ public class ColloctorsTest {
     }
 
     /**
-     * 去重
+     * 对象 - 去重
      */
     @Test
     public void testComparing() {

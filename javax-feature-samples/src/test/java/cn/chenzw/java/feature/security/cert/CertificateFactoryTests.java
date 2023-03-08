@@ -1,35 +1,29 @@
 package cn.chenzw.java.feature.security.cert;
 
 import lombok.extern.slf4j.Slf4j;
-
-
-import org.bouncycastle.operator.OperatorCreationException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
-
+import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import sun.security.provider.certpath.OCSP;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
 import java.security.*;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.security.cert.*;
+import java.security.cert.Certificate;
 import java.util.*;
 
 /**
@@ -63,7 +57,7 @@ public class CertificateFactoryTests {
         log.info("证书签名算法 => {}", x509Certificate.getSigAlgName());
 
         byte[] publicKey = x509Certificate.getPublicKey().getEncoded();
-        log.info("证书公钥 => {}", new String(publicKey));
+        log.info("证书公钥 => {}", Base64.getEncoder().encodeToString(publicKey));
 
         log.info("{}", x509Certificate);
     }
@@ -130,6 +124,13 @@ public class CertificateFactoryTests {
         // 生成私钥文件
     }
 
+    /**
+     * 生成PEM证书
+     *
+     * @param certificate
+     * @return
+     * @throws CertificateEncodingException
+     */
     private String generatePem(X509Certificate certificate) throws CertificateEncodingException {
         Base64.Encoder encoder = Base64.getEncoder();
         String certBegin = "-----BEGIN CERTIFICATE-----\n";
@@ -139,6 +140,50 @@ public class CertificateFactoryTests {
         String pemCertPre = new String(encoder.encode(derCert));
         String pemCert = certBegin + pemCertPre + certEnd;
         return pemCert;
+    }
+
+
+    @Test
+    public void testGetCertFromSite() throws IOException, CertificateParsingException, CertificateEncodingException {
+        URL url = new URL("https://www.bqrdh.com/");
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.connect();
+        Certificate[] certificates = conn.getServerCertificates();    // 拿到完整的证书链
+        for (Certificate certificate : certificates) {
+
+            X509Certificate cert = (X509Certificate) certificate; // sun.security.x509.X509CertImpl
+            log.info("证书版本 => {}", cert.getVersion());
+            log.info("证书类型 => {}", cert.getType());
+            log.info("证书序列号 => {}", cert.getSerialNumber());
+            log.info("证书生效日期 => {}", cert.getNotBefore());
+            log.info("证书失效日期 => {}", cert.getNotAfter());
+            log.info("证书拥有者 => {}", cert.getSubjectDN().getName());
+            log.info("证书颁发者 => {}", cert.getIssuerDN().getName());
+            log.info("证书签名算法 => {}", cert.getSigAlgName());
+            log.info("签名值 => {}", Arrays.toString(cert.getSignature()));
+            log.info("CriticalExtensionOIDs => {}", cert.getCriticalExtensionOIDs());
+            log.info("NonCriticalExtensionOIDs => {}", cert.getNonCriticalExtensionOIDs());
+            log.info(" => {}", cert.getIssuerAlternativeNames());
+            log.info(" => {}", cert.getBasicConstraints());
+            log.info(" => {}", cert.getKeyUsage());
+            log.info(" => {}", cert.getSigAlgParams());
+
+            log.info("备用域名： => {}", cert.getSubjectAlternativeNames());
+
+            byte[] publicKey = cert.getPublicKey().getEncoded();
+            log.info("证书公钥 => {}", Base64.getEncoder().encodeToString(publicKey));
+            log.info("证书CRT => {}", generatePem(cert));
+
+            URI responderURI = OCSP.getResponderURI(cert);
+            log.info("OCSP URI => {}", responderURI);
+
+            log.info("MD5指纹 => {}", DigestUtils.md5Hex(cert.getEncoded()));
+            log.info("SHA指纹 => {}", DigestUtils.sha1Hex(cert.getEncoded()));
+            log.info("SHA256指纹 => {}", DigestUtils.sha256Hex(cert.getEncoded()));
+
+            log.info("------------------------------------");
+        }
+        conn.disconnect();
     }
 
 }
