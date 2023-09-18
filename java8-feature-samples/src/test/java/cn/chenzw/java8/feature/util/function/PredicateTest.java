@@ -9,6 +9,9 @@ import java.util.function.BiPredicate;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
+/**
+ * 1 ~ n个参数、true|false返回值
+ */
 @RunWith(JUnit4.class)
 public class PredicateTest {
 

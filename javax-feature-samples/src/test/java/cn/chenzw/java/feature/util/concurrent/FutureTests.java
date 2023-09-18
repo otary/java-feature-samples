@@ -107,6 +107,6 @@ public class FutureTests {
     @Test
     public void testCompletableFuture2() {
         // thenCompose => 可以用于组合多个CompletableFuture，将前一个任务的返回结果作为下一个任务的参数，它们之间存在着业务逻辑上的先后顺序。
-        
+        // CompletableFuture.completedFuture()
     }
 }

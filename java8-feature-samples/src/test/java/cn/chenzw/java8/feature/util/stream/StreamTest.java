@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,8 +30,26 @@ public class StreamTest {
 
     @BeforeClass
     public static void init() {
-        books.add(new Book(1L, "JVM构造原理", 50.2));
-        books.add(new Book(2L, "Mavan实践", 10.4));
+        books.add(new Book(1L, "JVM构造原理", 50.2, Arrays.asList(
+                Book.BookLabel.builder()
+                        .id(110L)
+                        .name("标签1")
+                        .build(),
+                Book.BookLabel.builder()
+                        .id(111L)
+                        .name("标签2")
+                        .build()
+        )));
+        books.add(new Book(2L, "Mavan实践", 10.4, Arrays.asList(
+                Book.BookLabel.builder()
+                        .id(120L)
+                        .name("标签3")
+                        .build(),
+                Book.BookLabel.builder()
+                        .id(121L)
+                        .name("标签4")
+                        .build()
+        )));
         books.add(new Book(3L, "JDK8实践", 34.7));
     }
 
@@ -182,11 +201,10 @@ public class StreamTest {
         // 先转换个map待测试
         Map<Long, Book> map = books.stream().collect(Collectors.toMap((book) -> book.getId(), (book) -> book));
 
-        map.entrySet().stream().forEach((item)-> {
+        map.entrySet().stream().forEach((item) -> {
             log.info("item => {}", item);
         });
     }
-
 
 
     /**
@@ -248,6 +266,19 @@ public class StreamTest {
                 .flatMap(Arrays::stream);
 
         Assert.assertArrayEquals(new String[]{"H", "e", "l", "l", "o", "W", "o", "r", "d"}, flatMap.toArray());
+    }
+
+    @Test
+    public void testStreamFlatMap2() {
+        books.stream().flatMap(new Function<Book, Stream<?>>() {
+            @Override
+            public Stream<?> apply(Book book) {
+                System.out.println(book);
+                return book.getLabels().stream();
+            }
+        }).forEach((aa)-> {
+           // System.out.println(aa);
+        });
     }
 
     /**

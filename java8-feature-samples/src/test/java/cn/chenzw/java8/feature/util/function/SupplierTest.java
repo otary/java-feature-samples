@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 import java.util.function.*;
 
 /**
+ * 无参数，1个返回值
  * @see {@link Supplier | BooleanSupplier | IntSupplier | LongSupplier | DoubleSupplier}
  */
 @RunWith(JUnit4.class)

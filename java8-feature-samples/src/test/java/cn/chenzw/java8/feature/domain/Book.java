@@ -1,5 +1,9 @@
 package cn.chenzw.java8.feature.domain;
 
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.List;
 import java.util.Objects;
 
 public class Book {
@@ -8,10 +12,19 @@ public class Book {
     private String name;
     private Double price;
 
+    private List<BookLabel> labels;
+
     public Book(Long id, String name, Double price) {
         this.id = id;
         this.name = name;
         this.price = price;
+    }
+
+    public Book(Long id, String name, Double price, List<BookLabel> labels) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.labels = labels;
     }
 
     public Long getId() {
@@ -38,6 +51,14 @@ public class Book {
         this.price = price;
     }
 
+    public List<BookLabel> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<BookLabel> labels) {
+        this.labels = labels;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -60,5 +81,15 @@ public class Book {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, price);
+    }
+
+
+    @Data
+    @Builder
+    public static class BookLabel {
+
+        private Long id;
+
+        private String name;
     }
 }

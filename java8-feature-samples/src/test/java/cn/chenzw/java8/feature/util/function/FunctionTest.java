@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 import java.util.function.Function;
 
 /**
+ * 1 ~ n个参数、1个返回值
  * @see {@link }
  */
 @Slf4j

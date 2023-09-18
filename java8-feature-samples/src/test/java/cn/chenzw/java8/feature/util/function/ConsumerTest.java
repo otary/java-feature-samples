@@ -6,6 +6,9 @@ import org.junit.runners.JUnit4;
 
 import java.util.function.*;
 
+/**
+ * 1~2个参数，无返回值
+ */
 @RunWith(JUnit4.class)
 public class ConsumerTest {
 
