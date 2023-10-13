@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RunWith(JUnit4.class)
@@ -54,6 +55,20 @@ public class LocalDateTimeTest {
         // 获取时间戳
         long timestamp = instant.getEpochSecond();
         Assert.assertEquals(1692892800, timestamp);
+    }
+
+    /**
+     * 字符串 => LocalDateTime
+     */
+    @Test
+    public void testStr2LocalDateTime() {
+        LocalDateTime localDateTime = LocalDateTime.parse("2023-09-24T17:46:57", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        Assert.assertEquals("2023-09-24T17:46:57", localDateTime.toString());
+
+        // 带时区
+        LocalDateTime localDateTime2 = LocalDateTime.parse("2023-04-20T20:15:10.000+08:00", DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        Assert.assertEquals("2023-04-20T20:15:10", localDateTime2.toString());
+
     }
 
 }
