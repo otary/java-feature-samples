@@ -40,7 +40,7 @@ public class InputOutputStreamTests {
         ZipEntry zipEntry = null;
         while ((zipEntry = zis.getNextEntry()) != null) {
             String name = zipEntry.getName();
-            System.out.println(name);
+            log.info("file => {}", name);
         }
         zis.close();
     }
@@ -51,10 +51,8 @@ public class InputOutputStreamTests {
         for (int i = 0; i < 10; i++) {
             ZipEntry zipEntry = new ZipEntry("pp" + i + "/test" + i + ".txt");
             zos.putNextEntry(zipEntry);
-
             String content = "内容" + i;
             zos.write(content.getBytes(), 0, content.getBytes().length);
-
             zos.closeEntry();
         }
         zos.finish();
@@ -76,14 +74,11 @@ public class InputOutputStreamTests {
         while ((bytesRead = is.read(buff)) != -1) {
             baos.write(buff, 0, bytesRead);
         }
-
         //
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-
         // 读取文件的前4个字节来判断文件类型
         byte[] bytes = new byte[8];
         bais.read(bytes, 0, 8);
-
         String type = Hex.encodeHexString(bytes).toUpperCase();
         log.info("type => {}", type);
     }
