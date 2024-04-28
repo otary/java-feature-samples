@@ -46,7 +46,7 @@ public class FilesTests {
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                 log.info("file => {}, attrs => {}", path, attrs);
 
-                // 继续（可用于过滤文件）
+                // 继续或跳过（可用于过滤文件）
                 // return FileVisitResult.CONTINUE;
                 return super.visitFile(path, attrs);
             }
